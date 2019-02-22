@@ -1,15 +1,19 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import {ConsultaComponent} from './consulta/consulta.component';
+import {HomeComponent} from './home/home.component';
 import {HospitalComponent} from './hospital/hospital.component';
-import {PacienteComponent} from './paciente/paciente.component';
+import {MedicalConsultationComponent} from './medical-consultation/medical-consultation.component';
+import {PatientComponent} from './patient/patient.component';
+import {PatientCareComponent} from "./patient-care/patient-care.component";
 import {SigninComponent} from './auth/signin/signin.component';
 import {SignupComponent} from './auth/signup/signup.component';
 
 const routes: Routes = [
-  {path: 'consulta', component: ConsultaComponent},
+  {path: '', component: HomeComponent},
   {path: 'hospital', component: HospitalComponent},
-  {path: 'paciente', component: PacienteComponent},
+  {path: 'medical_consultation', component: MedicalConsultationComponent},
+  {path: 'patient', component: PatientComponent},
+  {path: 'patient_care', component: PatientCareComponent},
   {path: 'signin', component: SigninComponent},
   {path: 'signup', component: SignupComponent}
 ];

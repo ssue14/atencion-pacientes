@@ -1,0 +1,18 @@
+<div class="navtabs-container">
+  <!--Tabs-->
+  <nav mat-tab-nav-bar>
+    <span class="fsn-center-layout"></span>
+    <a mat-tab-link *ngFor="let item of menuList"
+       [routerLink]="item.link"
+       routerLinkActive="active">
+      {{item.name}}
+    </a>
+    <span class="fsn-center-layout"></span>
+  </nav>
+  <!--[End] Tabs-->
+
+  <div class="fsn-content" fxLayout="row" fxLayoutAlign="center center">
+    <router-outlet></router-outlet>
+  </div>
+
+</div>

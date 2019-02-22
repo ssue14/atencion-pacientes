@@ -1,0 +1,19 @@
+@import '../../../assets/theme/theme.scss';
+
+//Theme style
+.mat-list-option:hover,
+.mat-list-option:focus,
+.mat-nav-list
+.mat-list-item:hover,
+.mat-nav-list .mat-list-item:focus{
+  background-color: mat-color($app-accent,100);
+  color: mat-color($app-accent,darker);
+}
+
+//Component style
+.sidenav-list{
+  span {
+    padding-left:8px;
+    padding-top: 3px;
+  }
+}

@@ -1,0 +1,80 @@
+$fs-padd: 20px;
+$fs-no-margin-top:0;
+$fs-sm-margin-top:5px;
+$fs-margin:20px;
+$fs-font-default-size:11px;
+$fs-font-md-size:11.5px;
+
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  margin: 0;
+  font-family: 'Noto Sans', 'Tahoma', 'Arial', sans-serif;
+}
+
+//Component style
+.fsn-tab {
+  width: 100vw;
+  min-height: 50vh;
+
+  .fsn-tab-content {
+    margin-top: $fs-sm-margin-top;
+    > button {
+      font-size: $fs-font-md-size;
+      margin-right:$fs-margin;
+    }
+    > header.fns-table {
+      font-size: $fs-font-default-size;
+      margin-top: $fs-no-margin-top;
+      min-height: 40px;
+      font-weight: 400;
+    }
+    > div:first-child {
+      min-height: 50px;
+      padding: 0 $fs-padd;
+    }
+    > main {
+      font-size: $fs-font-md-size;
+      button{
+        font-size: $fs-font-default-size;
+        &.mat-button{
+          padding: 0;
+        }
+      }
+    }
+
+    .fsn-menu-bottom{
+      font-size: $fs-font-default-size;
+      margin-right: 20px;
+    }
+
+    .counter-feasible-station {
+      padding-right: 10px;
+    }
+  }
+}
+
+.fns-button-row{
+  .mat-stroked-button{
+    line-height: 25px;
+    margin-left: 5px;
+    margin-right: 0;
+  }
+}
+
+.fsn-filter{
+  mat-select {
+    font-size: 13px;
+    margin-right: 2px;
+  }
+
+  b,
+  mat-radio-button{
+    margin-left: 20px;
+    padding-right: 10px;
+    font-size: 13px;
+  }
+}
