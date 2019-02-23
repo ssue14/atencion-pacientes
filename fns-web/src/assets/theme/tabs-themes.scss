@@ -1,0 +1,21 @@
+@import 'theme.scss';
+
+//Theme style
+.fsn-tab {
+  border-top: 1px solid grey;
+
+  .fsn-tab-content  {
+    > header {
+      background-color: mat-color($app-accent, 100);
+    }
+
+    > main {
+      > div {
+        border-bottom: thin solid mat-color($foreground, divider);
+      }
+    }
+    > mat-divider-bottom {
+      margin: 10px 0;
+    }
+  }
+}

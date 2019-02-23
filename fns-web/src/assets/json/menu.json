@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Hospital",
+    "icon": "local_hospital",
+    "link": "/hospital",
+    "isHidden": false
+  },
+  {
+    "name": "Atención al paciente",
+    "icon": "transfer_within_a_station",
+    "link": "/patient_care",
+    "isHidden": false
+  },
+  {
+    "name": "Paciente",
+    "icon": "person",
+    "link": "/patient",
+    "isHidden": false
+  },
+  {
+    "name": "Consulta",
+    "icon": "transfer_within_a_station",
+    "link": "/medical_consultation",
+    "isHidden": false
+  }
+]

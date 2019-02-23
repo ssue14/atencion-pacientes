@@ -1,0 +1,90 @@
+<div class="fsn-tab">
+
+  <!--Filter--><!--[End] Filter-->
+
+  <!--Loading--><!--[End] Loading-->
+
+  <!--Error o result message should be a component-->
+  <div class="fsn-tab-content" *ngIf="error">
+    <div fxLayout="row" fxLayoutAlign="center center">
+      {{message}}
+    </div>
+  </div>
+  <!--[End] Error-->
+
+  <!--header-->
+  <div fxLayout="row" fxLayoutAlign="space-between center" *ngIf="!error&&!loading">
+    <div class="fsn-tab-content fsn-filter">
+      <b>Hospital: </b>
+      <mat-form-field>
+        <!--mat-select [(value)]="selected"--->
+        <mat-select value="option1">
+          <mat-option value="option1"></mat-option>
+          <mat-option value="option2">Nombre Hospital 2</mat-option>
+          <mat-option value="option3">Nombre Hospital 3</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+  </div>
+  <!--[End] header-->
+
+  <!--Add New Hospital-->
+  <div class="fsn-tab-content" *ngIf="hospitals.length>0 && !error && !loading">
+    <div fxLayout="row" fxLayoutAlign="end center">
+      <mat-icon></mat-icon>
+      <button mat-raised-button>
+        <mat-icon>control_point</mat-icon>
+        Agregar Hospital
+      </button>
+    </div>
+  </div>
+  <!--[End] Add New Hospital-->
+
+  <!--Hospitals-->
+  <div class="fsn-tab-content" *ngIf="hospitals.length>0 && !error && !loading">
+
+    <!--Counter--><!--[End] Counter-->
+    <!--Download file--><!--[End] Download-->
+
+    <!--Table-->
+    <header>
+      <div fxFlex="10"  fxFlexOffset="2" fxLayoutAlign="start center" >Disponible</div>
+      <div fxFlex="10"  fxFlexOffset="2" fxLayoutAlign="start center" >Código</div>
+      <div fxFlex="20"  fxFlexOffset="2" fxLayoutAlign="start center" >Nombre</div>
+      <div fxFlex="10"  fxFlexOffset="2" fxLayoutAlign="start center" >Region</div>
+      <div fxFlex="10"  fxFlexOffset="2" fxLayoutAlign="end center">   Accion</div>
+    </header>
+
+    <main>
+      <div fxLayout="row" *ngFor="let hospital of hospitals">
+        <div fxFlex="10"  fxFlexOffset="2" fxLayoutAlign="start center" >
+          <mat-radio-button [value]="hospital.id" [checked]="hospital.isActive" (click)="setActiveHospital()"></mat-radio-button></div>
+        <div fxFlex="10"  fxFlexOffset="2" fxLayoutAlign="start center" >{{hospital.code}}</div>
+        <div fxFlex="20"  fxFlexOffset="2" fxLayoutAlign="start center" >{{hospital.name}}</div>
+        <div fxFlex="10"  fxFlexOffset="2" fxLayoutAlign="start center" >{{hospital.region}}</div>
+        <div fxFlex="10"  fxFlexOffset="15" fxLayoutAlign="end center">
+          <button mat-icon-button>
+            <mat-icon>edit</mat-icon>
+          </button>
+
+          <button mat-icon-button>
+            <mat-icon>delete</mat-icon>
+          </button>
+          <button mat-button>
+            <mat-icon>control_point</mat-icon>
+            Agregar Consulta
+          </button>
+        </div>
+      </div>
+
+      <!-- Pagination --><!--[End] Pagination-->
+    </main>
+    <!--[End] Table-->
+
+    <!--Paginator--><!--[End] Paginator-->
+
+  </div>
+  <!-- [End] Hospitals-->
+
+</div>
