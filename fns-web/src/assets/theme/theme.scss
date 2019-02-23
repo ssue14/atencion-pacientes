@@ -1,0 +1,85 @@
+@import '../../../node_modules/@angular/material/theming';
+@include mat-core();
+
+//Custom app theme
+$fns-primary: (
+  50 : #e0f5fd,
+  100 : #b3e7fa,
+  200 : #80d7f7,
+  300 : #4dc6f4,
+  400 : #26baf1,
+  500 : #00aeef,
+  600 : #00a7ed,
+  700 : #009deb,
+  800 : #0094e8,
+  900 : #0084e4,
+  A100 : #ffffff,
+  A200 : #d8ecff,
+  A400 : #a5d4ff,
+  A700 : #8bc8ff,
+  contrast: (
+    50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #000000,
+    400 : #000000,
+    500 : #000000,
+    600 : #ffffff,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
+  )
+);
+
+$fns-accent: (
+  50 : #f3fbe8,
+  100 : #e0f5c6,
+  200 : #cbefa1,
+  300 : #b6e97b,
+  400 : #a7e45e,
+  500 : #97df42,
+  600 : #8fdb3c,
+  700 : #84d733,
+  800 : #7ad22b,
+  900 : #69ca1d,
+  A100 : #ffffff,
+  A200 : #e2ffce,
+  A400 : #c3ff9b,
+  A700 : #b4ff81,
+  contrast: (
+    50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #000000,
+    400 : #000000,
+    500 : #000000,
+    600 : #000000,
+    700 : #000000,
+    800 : #000000,
+    900 : #000000,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
+  )
+);
+
+
+
+$app-primary: mat-palette($fns-primary, 700, 300, 900);
+$app-accent:  mat-palette($fns-accent, 500,400, 700);
+$app-warn:    mat-palette($mat-red, 600);
+
+//$app-theme: mat-light-theme($app-primary, $app-accent, $app-warn);
+$app-theme: mat-light-theme($app-primary, $app-accent, $app-warn);
+
+
+@include angular-material-theme($app-theme);
+
+//Custom app color
+$foreground: map-get($app-theme, foreground);
+$background: map-get($app-theme, background);

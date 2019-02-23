@@ -1,0 +1,23 @@
+# Declare compose version
+version: '2'
+
+# Define your services
+services:
+  web: # Local web service
+    image: fonasa_web-img
+    container_name: fonasa_web
+    build: ./
+    ports:
+    - "4200:4200"
+    volumes:    # Volumes (directories) to mount
+    - ../../:/var/www/html/
+    command: sh -c "npm rebuild node-sass; npm install && ng serve -o --host 0.0.0.0 --port 4200"
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgres://fns@postgres/fns
+  postgres:
+    image: postgres:9.6.2-alpine
+    environment:
+      POSTGRES_USER: postgress
+      POSTGRES_DB: fnsstaging

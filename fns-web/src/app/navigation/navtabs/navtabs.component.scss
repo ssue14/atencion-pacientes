@@ -1,0 +1,23 @@
+@import '../../../assets/theme/theme.scss';
+
+//Component style
+nav {
+  .fsn-center-layout{
+    flex: 1 0.5 auto;
+  }
+}
+
+//Theme style
+.navtabs-container {
+  nav{
+    background-color: mat-color($app-primary,lighter);
+
+    mat-tab{
+      color: green;
+      .mat-tab-label-content{
+        border-bottom-color: mat-color($app-accent,lighter);
+      }
+    }
+  }
+
+}

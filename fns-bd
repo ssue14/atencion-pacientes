@@ -1,0 +1,348 @@
+--Fonasa test
+CREATE DATABASE fnsstaging;
+
+--Crear tabla hospital----------------------------------------------------
+CREATE TABLE hsp_hospitals (
+  ID     SERIAL PRIMARY KEY NOT NULL,
+  code   VARCHAR(20),
+  name   VARCHAR(80),
+  region VARCHAR(80)
+);
+
+--Insertar hospital
+INSERT INTO hsp_hospitals (code, name, region)
+VALUES
+    ('FNS003', 'Clinica Metropolitana', 'Atacama');
+/*
+  ('FNS001', 'Hospital Metropolitano', 'Metropolitana'),
+  ('FNS002', 'Hospital JM de los Rios', 'Valparaiso');
+*/
+--Consultas hospital
+  SELECT id, code, name, region
+  FROM hsp_hospitals
+WHERE region = 'Metropolitana';
+
+--Pacient ------------------------------------------------------------------------
+--status='En espera', 'atendido', 'pendiente'
+--weight_height= 1-4
+CREATE TABLE hsp_patients (
+  id              SERIAL PRIMARY KEY NOT NULL,
+  medical_history VARCHAR(20),
+  name            VARCHAR(80),
+  age             INTEGER,
+  weight_height   INTEGER                     DEFAULT 0,
+  smoker          BOOLEAN,
+  year_smoker     INTEGER                     DEFAULT 0,
+  on_diet         BOOLEAN,
+  priority        INTEGER                     DEFAULT 0,
+  risk            INTEGER                     DEFAULT 0,
+  status          VARCHAR(20)        NOT NULL DEFAULT 'pendiente',
+  arrival_dt      TIMESTAMP,
+  update_user     VARCHAR(40),
+  update_dt       TIMESTAMP          NOT NULL DEFAULT now(),
+  creation_dt     TIMESTAMP          NOT NULL DEFAULT now(),
+  creation_user   VARCHAR(20)                 DEFAULT 'sriosmar'
+);
+
+--Antes de  insertar paciente + calculo prioridad + riesgo
+
+--nota: [Calcular prioridad y riesgo Al asignar el paciente a una consulta]
+--Query relation paciente/consulta atencion al cliente + calculo prioridad
+
+--Inserts de pruebas
+INSERT INTO hsp_patients (
+  medical_history,
+  name,
+  age,
+  weight_height,
+  smoker,
+  year_smoker,
+  on_diet,
+  creation_user,
+  creation_dt
+)
+VALUES
+  ('172364', 'Anciano J', '77', 0, TRUE, 20, FALSE, 'sriosmar', now()),
+  ('929456', 'Niño  A', '5', 2, FALSE, 0, FALSE, 'sriosmar', now()),
+  ('623444', 'Niño  B', '14', 4, FALSE, 0, FALSE, 'sriosmar', now()),
+  ('123450', 'Niño  C', '14', 4, FALSE, 0, FALSE, 'sriosmar', now()),
+  ('234567', 'Joven D', '20', 0, FALSE, 0, FALSE, 'sriosmar', now()),
+  ('434867', 'Joven E', '30', 0, TRUE, 1, FALSE, 'sriosmar', now()),
+  ('374567', 'Anciano F', '70', 0, FALSE, 0, FALSE, 'sriosmar', now()),
+  ('374567', 'Anciano G', '85', 0, FALSE, 0, TRUE, 'sriosmar', now()),
+  ('474564', 'Anciano H', '50', 0, TRUE, 20, TRUE, 'sriosmar', now());
+
+
+
+--(medical_history,name,age,weight_height,smoker,year_smoker,on_diet,creation_user,creation_dt)
+
+--Consultas paciente
+
+UPDATE hsp_patients
+SET risk = 0;
+UPDATE hsp_patients
+SET risk = 3
+WHERE medical_history = '929456';
+UPDATE hsp_patients
+SET risk = 8
+WHERE medical_history = '234567';
+
+----Listar_Pacientes_Mayor_Riesgo.-----------------------------------------------------------------------------------
+  SELECT
+    id,
+    medical_history,
+    name,
+    age,
+    weight_height,
+    smoker,
+    year_smoker,
+    on_diet
+  FROM hsp_patients
+  WHERE risk > (
+    SELECT risk
+    FROM hsp_patients
+    WHERE medical_history = '929456')
+  ORDER BY risk ASC;
+
+UPDATE hsp_patients
+SET status = 0;
+UPDATE hsp_patients
+SET status = 'en espera'
+WHERE medical_history = '623444';
+UPDATE hsp_patients
+SET status = 'en espera'
+WHERE medical_history = '374567';
+UPDATE hsp_patients
+SET status = 'en espera'
+WHERE medical_history = '123450';
+
+UPDATE hsp_patients
+SET priority = 0;
+
+SELECT *
+FROM hsp_patients
+WHERE status = 'en espera';
+
+--Paciente_Mas_Anciano en espera--------------------------------------------------------------------------------------
+SELECT
+  id,
+  medical_history,
+  name,
+  age,
+  weight_height,
+  smoker,
+  year_smoker,
+  on_diet
+FROM hsp_patients
+WHERE status = 'en espera'
+ORDER BY age DESC
+LIMIT 1;
+
+--Listar todos los pacientes-------------------------------------------------------------------------------------------
+SELECT
+  id,
+  medical_history,
+  name,
+  age,
+  weight_height,
+  smoker,
+  year_smoker,
+  on_diet
+FROM hsp_patients pacientes;
+
+--Listar_Pacientes_Fumadores_Urgentes----------------------------------------------------------------------------------
+SELECT
+  id,
+  medical_history,
+  name,
+  age,
+  weight_height,
+  smoker,
+  year_smoker,
+  on_diet
+FROM hsp_patients
+WHERE 'Urgencia' = (
+  CASE
+  WHEN age > 1 AND age <= 5 AND priority <= 4
+    THEN 'Pediatría'
+  WHEN age >= 16 AND priority <= 4
+    THEN 'CGI'
+  ELSE 'Urgencia'
+  END)
+      AND smoker = TRUE;
+
+--Crear tabla consulta-------------------------------------------------------------------------------------------------
+/*
+consultation_type: Pediatría, Urgencia ó CGI (Consulta General Integral)).
+status: Desocupada, Ocupada o En espera,
+*/
+CREATE TABLE hsp_medical_consultations (
+  id                       SERIAL PRIMARY KEY NOT NULL,
+  number_patients_attended INTEGER     DEFAULT 0,
+  specialist_name          VARCHAR(80),
+  consultation_type        VARCHAR(20),
+  status                   VARCHAR(20) DEFAULT 'desocupada',
+  hosp  ital_id              INTEGER
+);
+
+--Insertar registros pruebas
+INSERT INTO hsp_medical_consultations (
+  specialist_name,
+  consultation_type,
+  hospital_id
+)
+VALUES
+  ('Especialista A', 'Pediatria', 2),
+  ('Especialista B', 'CGI', 3),
+  ('Especialista C', 'Urgencia', 2),
+  ('Especialista D', 'CGI', 2),
+  ('Especialista E', 'Pediatria', 2),
+  ('Especialista F', 'Pediatria', 3),
+  ('Especialista E', 'Urgencia', 3);
+--('number_patients_attended', 'specialist_name', 'consultation_type','');
+
+--Consulta con mas pacientes atendidos
+SELECT
+  id,
+  medical_history,
+  name,
+  age,
+  weight_height,
+  smoker,
+  year_smoker,
+  on_diet
+FROM hsp_medical_consultations
+WHERE number_patients_attended > 0
+ORDER BY number_patients_attended DESC
+LIMIT 1;
+
+--Liberar_Consultas-----------------------------------------------------------------------------------------------------
+UPDATE hsp_medical_consultations
+SET status = 'ocupada'
+WHERE status = 'desocupada';
+--Una vez liberada se debe atender a los pacientes que esten En espera
+
+--Atender_Paciente-----------------------------------------------------------------------------------------------------
+---Pacientes status=  'pendiente', 'en espera', 'atendido''
+/*
+Actualizar Tabla
+
+0. Ordenar los paciente segun patient.priority DESC
+
+   Si patient.age entre (1-15 años) Y patient.priority=<4 Y patient.status = 'pendiente'
+   Y consultas.consultation_type = 'Pediatría' Y consultation.status = 'desocupada'
+
+   Si patient.age >=16 años Y patient.priority=<4 Y patient.status = 'pendiente'
+   Y  consultas.consultation_type = 'CGI,' Y consultation.status = 'desocupada'
+
+   Si consultation.status = 'desocupada' Y patient.priority>4
+   Y consultas.consultation_type = 'Urgencia,'
+
+   Entonces Si existen consultas
+   Modificar consultation.status = 'Ocupado' Y Modificar patient.status = 'atendido'
+
+  Sino Modificar patient.status = 'pendiente'
+
+
+Flujo
+1. Obtener pacientes con status que estan en espera patient.status = 'en espera'
+   Priorizados segun criterios tipo de consulta, consultas.consultation_type, prioridad
+   Modificar el status del patiente patient.status='atendido'
+   --Modificar el status de la consulta consultation.status = 'ocupado'
+   --Modificar number_patients_attended+1
+
+
+2. Sino existe disponibilidad en la sala de espera (NO pacientes con patient.status = 'en espera' )
+   Dado que el paciente tiene patient.status = 'pendiente'
+   Modificar el status del patiente patient.status='atendido'
+   Modificar el status de la consulta consultation.status = 'desocupado'
+   Modificar number_patients_attended+1
+
+3.Si todas las consultas tienen  consultation.status = 'ocupado'
+  Dado que el paciente tiene patient.status = 'pendiente'
+  Validar disponibilidad prioriodad + consultation_type + edad
+  Modificar el status del patiente patient.status='en espera'
+  Modificar el status de la consulta consultation.status = 'desocupado'
+*/
+
+/*
+    consulta  desocupada || null => paciente atendido
+   !consulta desocupada && !pacientes en espera=> paciente pendiente
+    consultas ocupadas => paciente pendiente
+SELECT
+    medical_history,
+    name,
+    age,
+    weight_height,
+    smoker,
+    year_smoker,
+    on_diet
+    FROM hsp_patients
+      WHERE 'Urgencia' = (
+      CASE
+        WHEN age>1 AND age<=5 AND priority <= 4 THEN  'Pediatría'
+        WHEN age >=16 AND priority<=4 THEN 'CGI'
+        ELSE 'Urgencia'
+      END)
+
+ */
+-- pacientes segun tipo de consulta: de los pacientes 'Urgencia' o 'Pediatría' o 'CGI'
+-- devolver cantidad de registros
+
+--Presiono sobre boton atender pacientes, front envia 3 peticiones con tipo de consulta debe estar sincronas
+
+--lista priorizacion de pacientes
+--'en espera', 'Urgencia'
+
+--Al cambiar de estatus la consulta desocupado a ocupado se debe:
+/*
+1.
+   Obtener pacientes con status que estan en espera patient.status = 'en espera'
+   Priorizados segun criterios tipo de consulta, consultas.consultation_type, prioridad
+   Modificar el status del patiente patient.status='atendido'
+   -- Modificar el status de la consulta consultation.status = 'ocupado'
+   --Modificar number_patients_attended+1
+
+SELECT
+  SUM(CASE WHEN c.consultation_type = 'Pediatria'
+    THEN 1
+      ELSE 0 END) AS pediatria,
+  SUM(CASE WHEN c.consultation_type = 'CGI'
+    THEN 1
+      ELSE 0 END) AS cgi,
+  SUM(CASE WHEN c.consultation_type = 'Urgencia'
+    THEN 1
+      ELSE 0 END) AS urgencia
+
+*/
+
+
+
+SELECT *
+FROM hsp_patients patient
+WHERE patient.status = 'en espera' AND
+      'Urgencia' = (
+        CASE
+        WHEN age > 1 AND age <= 5 AND priority <= 4
+          THEN 'Pediatria'
+        WHEN age >= 16 AND priority <= 4
+          THEN 'CGI'
+        ELSE 'Urgencia'
+        END)
+ORDER BY patient.priority, patient.arrival_dt DESC;
+-----------------------------------------------------------------------------------------------------------
+--Cantidad de consultas en status desocupadas se envia desde el front status
+    SELECT
+      SUM(CASE WHEN c.consultation_type = 'Pediatria'
+        THEN 1
+          ELSE 0 END) AS pediatria,
+      SUM(CASE WHEN c.consultation_type = 'CGI'
+        THEN 1
+          ELSE 0 END) AS cgi,
+      SUM(CASE WHEN c.consultation_type = 'Urgencia'
+        THEN 1
+          ELSE 0 END) AS urgencia
+    FROM hsp_medical_consultations c
+    WHERE c.status = 'desocupada' AND c.hospital_id = 2
+
+----------------------------------------------------------------------------------------------------------

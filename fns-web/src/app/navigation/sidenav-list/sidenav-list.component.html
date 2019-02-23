@@ -1,0 +1,23 @@
+<mat-nav-list class="fsn-sidenav-list">
+
+  <a mat-list-item routerLink="/hospital" (click)="onToggleCloseSideNav()">
+    <mat-icon>local_hospital</mat-icon>
+    <span>Hospital</span>
+  </a>
+
+  <a mat-list-item routerLink="/medical_consultation" (click)="onToggleCloseSideNav()">
+    <mat-icon>transfer_within_a_station</mat-icon>
+    <span>Consulta</span>
+  </a>
+
+  <a mat-list-item routerLink="/patient" (click)="onToggleCloseSideNav()">
+    <mat-icon>person</mat-icon>
+    <span>Paciente</span>
+  </a>
+
+
+  <a mat-list-item routerLink="/signout" (click)="onToggleCloseSideNav()">
+    <mat-icon>exit_to_app</mat-icon>
+    <span>Signout</span>
+  </a>
+</mat-nav-list>
